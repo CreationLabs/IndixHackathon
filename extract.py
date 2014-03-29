@@ -3,7 +3,10 @@ import simplejson as json
 from sklearn import svm 
 __DEBUG__ = False # False if production
 MAIN_JSON = {}
+TAG_JSON = {}
 outfile = open('dump.json','w')
+tagfile = open('tag.json','w')
+#reversefile = open('reverse.json','w')
 
 def getJson(row,PorL,URL):
   row = row[2]
@@ -50,6 +53,16 @@ def getJson(row,PorL,URL):
   mainJson[url]["host"] = host
   mainJson[url]["key"] = queries
   mainJson[url]["tags"] = tags
+  for tag in tags:
+    if tag not in TAG_JSON.keys():
+      TAG_JSON[tag] = {}
+      TAG_JSON[tag][PorL] = 1
+    else:
+      try: 
+        TAG_JSON[tag][PorL]+=1
+      except:
+        TAG_JSON[tag][PorL]=1
+        
   mainJson[url]["result"] = PorL
   return mainJson
   
@@ -67,6 +80,10 @@ with open('indexFile.tsv','rb') as tsvin:
       line+=1
       #raw_input() # Line by line input prompt
   json.dump(MAIN_JSON,outfile,sort_keys=True,indent=4)
+  json.dump(TAG_JSON,tagfile,sort_keys=True,indent=4)
+  #json.dump(REVERSE_JSON,reversefile,sort_keys=True,indent=4)
+  #reversefile.close()
+  tagfile.close()
   outfile.close()
   print "DONE"
 
