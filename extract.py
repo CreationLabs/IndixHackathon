@@ -27,6 +27,7 @@ def getJson(row):
       DELIMITER = '&'
     queryparams = queryparams.split(DELIMITER)
     queries = []
+  queries = []
     for query in queryparams:
       query = tuple(query.split('='))
       queries.append(query)
