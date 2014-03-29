@@ -27,6 +27,7 @@ for datum in data.keys():
 			element = {}
 			element['result'] = PorL
 			element['url'] = url
+			REVERSE_TAGS[tag].append(element)
 json.dump(REVERSE_TAGS,outfile2,sort_keys=True,indent=4)
 json.dump(REVERSE_KEYS,outfile1,sort_keys=True,indent=4)
 
