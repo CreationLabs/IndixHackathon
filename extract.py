@@ -1,5 +1,9 @@
 import csv
-__DEBUG__ = True # False if production
+import json
+from sklearn import svm 
+__DEBUG__ = False # False if production
+MAIN_JSON = {}
+#outfile = open('dump.json','w')
 
 def getJson(row):
   row = row[2]
@@ -11,23 +15,28 @@ def getJson(row):
     print 'Host : ',host
   others = row[index:].split('/') #Supposing that / means sub url divisions
   last = others[-1]
+  tags = others[:-1]
+  key = last.split('?')[0]
   if __DEBUG__:
     print "Others : ", others
     print "Last : ",last
-  queryparams = last
+    print "Last changed :", last.split('?')
+  queryparams = '&'.join(last.split('?')[1:])
   others.append(last.split('?')[0])
   beforeLast = '/'.join(others[:-1])
+
   if __DEBUG__:
     print "BeforeLast : ",beforeLast
     print "Queryparams: ",queryparams
+    print others[-1].split('&')
+  queries = []
   if len(queryparams) > 0:
-    if queryparams.split(';') > 1:
+    if len(queryparams.split(';')) > len(queryparams.split('&')) :
       DELIMITER = ';'
-    elif queryparams.split('&') > 1:
+    else:
       DELIMITER = '&'
     queryparams = queryparams.split(DELIMITER)
     queries = []
-  queries = []
     for query in queryparams:
       query = tuple(query.split('='))
       queries.append(query)
@@ -35,21 +44,24 @@ def getJson(row):
     queryparams = {}
   mainJson = {}
   mainJson[host] = {}
-  mainJson[host][beforeLast] = queries
+  mainJson[host][key] = queries
+  mainJson[host]["tags"] = tags
   print mainJson
   return mainJson
   
 def addToDB(json):
-  print 'Timepass'
+  MAIN_JSON.append(json)
+
 
 with open('indexFile.tsv','rb') as tsvin:
   tsvin = csv.reader(tsvin, delimiter='\t')
   line = 0
   for row in tsvin:
-      json = getJson(row)
-      addToDB(json)
+      json = getJson(row)    
       line+=1
-      raw_input() # Line by line input prompt
+      #raw_input() # Line by line input prompt
+  print MAIN_JSON
+
 
 
 
