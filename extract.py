@@ -4,8 +4,11 @@ from sklearn import svm
 __DEBUG__ = False # False if production
 MAIN_JSON = {}
 TAG_JSON = {}
+KEY_JSON = {}
+
 outfile = open('dump.json','w')
 tagfile = open('tag.json','w')
+keyfile = open('key.json','w')
 #reversefile = open('reverse.json','w')
 
 def getJson(row,PorL,URL):
@@ -53,6 +56,17 @@ def getJson(row,PorL,URL):
   mainJson[url]["host"] = host
   mainJson[url]["key"] = queries
   mainJson[url]["tags"] = tags
+  
+  for key_obj in queries:
+    if key_obj[0] not in KEY_JSON.keys():
+      KEY_JSON[key_obj[0]] = {}
+      KEY_JSON[key_obj[0]][PorL] = 1
+    else:
+      try:
+	KEY_JSON[key_obj[0]][PorL]+=1
+      except:
+	KEY_JSON[key_obj[0]][PorL]=1
+ 					
   for tag in tags:
     if tag not in TAG_JSON.keys():
       TAG_JSON[tag] = {}
@@ -81,6 +95,7 @@ with open('indexFile.tsv','rb') as tsvin:
       #raw_input() # Line by line input prompt
   json.dump(MAIN_JSON,outfile,sort_keys=True,indent=4)
   json.dump(TAG_JSON,tagfile,sort_keys=True,indent=4)
+  json.dump(KEY_JSON,keyfile,sort_keys=True,indent=4)
   #json.dump(REVERSE_JSON,reversefile,sort_keys=True,indent=4)
   #reversefile.close()
   tagfile.close()
