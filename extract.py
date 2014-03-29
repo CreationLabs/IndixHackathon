@@ -1,6 +1,10 @@
 import csv
 import simplejson as json
 from sklearn import svm 
+import re
+patternSlug = re.compile('[A-Za-z]*(-[A-Za-z]*)+')
+patternSlug2 = re.compile('[A-Za-z]*(_[A-Za-z]*)+')
+
 __DEBUG__ = False # False if production
 MAIN_JSON = {}
 TAG_JSON = {}
@@ -68,6 +72,12 @@ def getJson(row,PorL,URL):
 	KEY_JSON[key_obj[0]][PorL]=1
  					
   for tag in tags:
+    if tag == "":
+      continue
+    if tag.isdigit():
+      tag = "_NUMBER"
+    if patternSlug.match(tag) or patternSlug2.match(tag):
+      tag = "_SLUG"
     if tag not in TAG_JSON.keys():
       TAG_JSON[tag] = {}
       TAG_JSON[tag][PorL] = 1
