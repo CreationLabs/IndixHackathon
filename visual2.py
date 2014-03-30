@@ -7,12 +7,15 @@ dumpfile = open('dump.json','r')
 
 data = json.load(tagfile)
 dump = json.load(dumpfile)
-
+tot = 0
+our = 0
 for url in dump:
+	tot+=1
 	element = dump[url]
 	subelem = dump[url][dump[url].keys()[0]]
 	tags = subelem['tags']
 	res = subelem['result']
+
 	score = 0
 	for tag in tags:
 		if tag in data:
@@ -24,10 +27,11 @@ for url in dump:
 		oures = 'L'
 	else:
 		oures = 'P'
-	print oures,res
-	print url
-	raw_input()
+	#print oures,res
+	#print url
+	#raw_input()
 	if oures == res :
+		our += 1
 		pass
 	else:
 		for tag in tags:
@@ -36,6 +40,9 @@ for url in dump:
 				plt.scatter(data[tag]['P'],data[tag]['L'],s=80)
 			except:
 				pass
-		print url	
-
+		#print url	
+print our,tot
+print "Accuracy : ",(our*100.0)/tot,"%" 
+plt.xlabel("Product Anomalies")
+plt.ylabel("Listing Anomalies")
 plt.show()
