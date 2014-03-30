@@ -80,6 +80,8 @@ def getJson(row,PorL,URL):
       tag = "_SLUG"
     if tag not in TAG_JSON.keys():
       TAG_JSON[tag] = {}
+      TAG_JSON[tag]['L'] = 0
+      TAG_JSON[tag]['P'] = 0
       TAG_JSON[tag][PorL] = 1
     else:
       try: 

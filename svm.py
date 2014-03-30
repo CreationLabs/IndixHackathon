@@ -9,3 +9,4 @@ def SvC(X,Y):
 	    gamma=0.0, kernel='rbf', max_iter=-1, probability=False,
 	    random_state=None, shrinking=True, tol=0.001, verbose=False)
 	#print(clf.predict([[-0.8, -1]]))
+	
